@@ -33,13 +33,12 @@ pipeline {
         }
         
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    // Use the fully qualified plugin coordinates
-                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar'
-                }
+          def mvn = tool 'Maven';
+          withSonarQubeEnv() {
+            sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=java-jenkins-demo-1 -Dsonar.projectName='java-jenkins-demo-1'"
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
