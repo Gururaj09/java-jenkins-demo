@@ -33,9 +33,13 @@ pipeline {
         }
         
         stage('SonarQube Analysis') {
-          def mvn = tool 'Maven';
-          withSonarQubeEnv() {
-            sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=java-jenkins-demo-1 -Dsonar.projectName='java-jenkins-demo-1'"
+            steps {
+                script {
+                    def mvn = tool 'Maven';
+                    withSonarQubeEnv('SonarQube') { // Ensure 'SonarQubeServer' matches your Jenkins system configuration name
+                        sh "${mvn}/bin/mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=java-jenkins-demo -Dsonar.projectName='java-jenkins-demo'"
+                    }
+                }
             }
         }
 
