@@ -33,13 +33,11 @@ pipeline {
         }
         
         stage('SonarQube Analysis') {
-            steps {
-                // Requires the SonarQube Scanner plugin and server configuration in Jenkins
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
+           def mvn = tool 'Default Maven';
+           withSonarQubeEnv() {
+             sh "${mvn}/bin/mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=java-jenkins-demo -Dsonar.projectName='java-jenkins-demo'"
+           }
+        }        
         
         stage('Build Docker Image') {
             steps {
